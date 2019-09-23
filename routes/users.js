@@ -43,12 +43,13 @@ router.post('/authenticate', (req, res, next) => {
                 if(err) throw err;
                 if(isMatch)
                 {
-                    const token = jwt.sign({data: user}, config.secret, {
-                        expiresIn: '2d'  // 1 week
-                    });
+                    const token = jwt.sign({data: user},
+                        config.secret,
+                        { expiresIn: '2d'  // 1 week
+                    } );
                     res.json({
                         success: true,
-                        token: 'JWT'+token,
+                        token: 'Bearer'+token,
                         user: {
                             id: user._id,
                             name: user.username,
@@ -66,9 +67,25 @@ router.post('/authenticate', (req, res, next) => {
 });
 
 // User Profile
-router.get('/profile', passport.authenticate('jwt', { session: false } ), (req, res, next) => {
-    console.log("hello");
-    res.json( { user: req.user });
-});
+// router.get('/profile', passport.authenticate('jwt', { session: false } ), function(req, res, next) {
+//     console.log("hello");
+//     res.json( { user: req.user });
+// });
+
+router.get('/profile', function(req, res, next) {
+    passport.authenticate('jwt', (err, user, info) => {
+        res.json({ msg: "Target hit", error: err, user: user, info: info });
+        // if (err)
+        // {
+        //     res.json({ msg: "Failed with error", error: err, user: user, info: info });
+        // }
+        // else if (!user)
+        // {
+        //     res.json({ msg: "Failed user not found", error: err, user: user, info: info });
+        // }
+        // else
+        //     res.json( { user: req.user });
+    })(req, res, next);
+  });
 
 module.exports = router;
