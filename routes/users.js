@@ -49,7 +49,7 @@ router.post('/authenticate', (req, res, next) => {
                     } );
                     res.json({
                         success: true,
-                        token: 'Bearer'+token,
+                        token: 'JWT '+token,
                         user: {
                             id: user._id,
                             name: user.username,
@@ -67,25 +67,8 @@ router.post('/authenticate', (req, res, next) => {
 });
 
 // User Profile
-// router.get('/profile', passport.authenticate('jwt', { session: false } ), function(req, res, next) {
-//     console.log("hello");
-//     res.json( { user: req.user });
-// });
-
-router.get('/profile', function(req, res, next) {
-    passport.authenticate('jwt', (err, user, info) => {
-        res.json({ msg: "Target hit", error: err, user: user, info: info });
-        // if (err)
-        // {
-        //     res.json({ msg: "Failed with error", error: err, user: user, info: info });
-        // }
-        // else if (!user)
-        // {
-        //     res.json({ msg: "Failed user not found", error: err, user: user, info: info });
-        // }
-        // else
-        //     res.json( { user: req.user });
-    })(req, res, next);
-  });
+router.get('/profile', passport.authenticate('jwt', { session: false } ), function(req, res, next) {
+    res.json( req.user );
+});
 
 module.exports = router;
