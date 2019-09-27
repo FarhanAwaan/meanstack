@@ -15,9 +15,10 @@ router.post('/register', (req, res, next) => {
     }));
 
     User.addUser(newUser, (err, user) => {
-        if(err)
+        // console.log(user);
+        if (err)
         {
-            res.json( { success: false, msg: "Failed to register new user" } );
+            res.json( { success: true, msg: "failed to register user" } );
         }
         else{
             res.json( { success: true, msg: "New user registered", data: user } );
@@ -49,6 +50,7 @@ router.post('/authenticate', (req, res, next) => {
                     } );
                     res.json({
                         success: true,
+                        msg: "User loggedin",
                         token: 'JWT '+token,
                         user: {
                             id: user._id,
